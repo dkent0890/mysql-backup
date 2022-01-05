@@ -9,7 +9,7 @@ databases=`mysql --user=$USER --password=$PASSWORD -e "SHOW DATABASES;" | tr -d 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "sys" ]] && [[ "$db" != "performance_schema" ]] ; then
         echo "Dumping database: $db"
-        mysqldump --user=$USER --password=$PASSWORD --databases $db > $OUTPUT/date +%Y%m%d.$db.sql
-        gzip $OUTPUT/date +%Y%m%d.$db.sql
+        mysqldump --user=$USER --password=$PASSWORD --databases $db > $OUTPUT/`date +%Y%m%d`.$db.sql
+        gzip $OUTPUT/`date +%Y%m%d`.$db.sql
     fi
 done
