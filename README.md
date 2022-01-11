@@ -11,21 +11,21 @@
 
 1. данные MySQL-сервера  
      #USER="username"\
-     #PASSWORD="my_password"
+     #PASSWORD="my_password"\
 2. директория для хранения backup-file\
      #OUTPUT="/*/*/backup" 
-3. день недели дня еженедельного и дата для ежемесячного ханения
+3. день недели дня еженедельного и дата для ежемесячного ханения\
      #WEEK="Saturday"\
-     #WDATE="**"     
-4. необходимое кол-во последних backup записей за денелю, месяц, год
+     #WDATE="**"\     
+4. необходимое кол-во последних backup записей за денелю, месяц, год\
      #DBACKUP="*"\
      #MBACKUP="*"\
-     #WBACKUP="*"
+     #WBACKUP="*"\
 5. настройка Cron
-   Согласно следующей команды "crontab -e" производим настройка файла crontab
-      #MAILTO=”usermail”
-      #SHELL=/bin/bash
-      #HOME=/
+   Согласно следующей команды "crontab -e" производим настройка файла crontab\
+      #MAILTO=”usermail”\
+      #SHELL=/bin/bash\
+      #HOME=/\
 
        * 6 * * *   /*/*/backup_databases.sh 
              usermail - электронная почта получателя, о работе скрипта
