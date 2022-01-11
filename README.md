@@ -1,4 +1,4 @@
-### Backup mysql databeses to time 
+### Backup mysql databeses to time. 
 
 #### Скрипт предназначен для резервного копирования баз данных MySQL-сервера
 #### согластно расписания, с хренением необходиммого кол-ва backup-file  
