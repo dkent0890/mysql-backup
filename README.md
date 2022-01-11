@@ -1,38 +1,44 @@
 ### Backup mysql databeses to time 
 
-#### скрипт предназначен для резурвного копирования баз данных MySQL-сервера
+#### Скрипт предназначен для резервного копирования баз данных MySQL-сервера
+#### согластно расписания, с хренением необходиммого кол-ва backup-file  
 
-##### Копирование производится: 
-- по дате и времении, согластно cron-записей
-- в дерикторию согласно записи скрипта
-- каждой базы отдельно в gzip файлы
+#### Выполнения скритна:
 
-
-##### Для реализации скритна необходимо:
-1. username и userpassword для MySQL-сервера
-2. директория место расположение backup-file  
-3. классический демон Cron
-
-##### Установка и наладка
 Клонируем репозиторий "git clone git@github.com:dkent0890/mysql-backup.git"
 
 Вносим изменения в файл backup_databases.sh:
-- USER="username" - указывая username MySQL
-- PASSWORD="password" - указывая password MySQL
-- OUTPUT="/usr/home/backup" - указывая дерикторию для backup-databases MySQL
 
-Создаем дерикторию /usr/home/backup для backup-file 
+1. данные MySQL-сервера
+     #USER="username"\
+     #PASSWORD="my_password"\
+2. директория для хранения backup-file\
+     #OUTPUT="/*/*/backup"
+3. день недели дня еженедельного и дата для ежемесячного ханения\
+     #WEEK="Saturday"\
+     #WDATE="**"
+4. необходимое кол-во последних backup записей за денелю, месяц, год\
+     #DBACKUP="*"\
+     #MBACKUP="*"\
+     #WBACKUP="*"
+5. настройка Cron
+   Согласно следующей команды "crontab -e" производим настройка файла crontab\
+      #MAILTO=”usermail”\
+      #SHELL=/bin/bash\
+      #HOME=/
 
-#### Настроиваем Cron
-Согласно следующей команды "crontab -e" производим настройка файла crontab
-MAILTO=”usermail”
-SHELL=/bin/bash
-HOME=/
+       * 6 * * *   /*/*/backup_databases.sh
+             usermail - электронная почта получателя, о работе скрипта
+             * 6 * * *  - время запуска скрипта (каждый день в 6:00)
+             /*/*/backup_databases.sh - путь к скприпту
 
- * 6 * * * /home/vagrant/backup_databases.sh 
+#### Вывод данных реализации скрипта:
+1. каждая databases отдельно в gzip архиве
+2. в директорию недельного, месячного и годового хранения\
+     #/*/*/backup/daily/"data"\
+     #/*/*/backup/monthly/"data"\
+     #/*/*/backup/weekly/"data"
 
- Где usermail - электронная почта получателя, о работе скрипта
- * 6 * * *  - время и дата запуска скрипта (каждый день в 6:00)
- /home/vagrant/backup_databases.sh - путь к скприпту
+##### При указании дня недели или дата в файла crontab произведеи некоректное
+##### работу скрипта
 
-  
