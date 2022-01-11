@@ -10,7 +10,7 @@
 Вносим изменения в файл backup_databases.sh:
 
 1. данные MySQL-сервера  
-     #USER="username"
+     #USER="username"\
      #PASSWORD="my_password"
 2. директория для хранения backup-file
      #OUTPUT="/*/*/backup" 
