@@ -12,14 +12,14 @@
 1. данные MySQL-сервера  
      #USER="username"\
      #PASSWORD="my_password"
-2. директория для хранения backup-file
+2. директория для хранения backup-file\
      #OUTPUT="/*/*/backup" 
 3. день недели дня еженедельного и дата для ежемесячного ханения
-     #WEEK="Saturday"
+     #WEEK="Saturday"\
      #WDATE="**"     
 4. необходимое кол-во последних backup записей за денелю, месяц, год
-     #DBACKUP="*"
-     #MBACKUP="*"
+     #DBACKUP="*"\
+     #MBACKUP="*"\
      #WBACKUP="*"
 5. настройка Cron
    Согласно следующей команды "crontab -e" производим настройка файла crontab
