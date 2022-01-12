@@ -1,16 +1,16 @@
 #!/bin/bash
 
-USER="username"         #USER для базы нанных MySQL 
-PASSWORD="my_password"  #PASSWORD для базы нанных MySQL
-OUTPUT="/*/*/backup"    #директория для хранения резервных копий 
-#/*/*/backup/daily/"data"   директория backup записей за денелю 
-#/*/*/backup/monthly/"data" директория backup записей за месяц 
-#/*/*/backup/weekly/"data"  директория backup записей за год
-WEEK="Saturday" #день недели дня еженедельного копированияя
-WDATE="**"      #дата для ежемесячного копирования
-DBACKUP="*"     #колическтво backup записей за денелю
-MBACKUP="*"     #количество backup записей за месяц
-WBACKUP="*"     #количество backup записей за год
+USER="dima_user"         #USER для базы нанных MySQL 
+PASSWORD="1234"  #PASSWORD для базы нанных MySQL
+OUTPUT="/home/vagrant/backup"    #директория для хранения резервных копий 
+#/*/*/backup/daily/   директория backup записей за денелю 
+#/*/*/backup/monthly/ директория backup записей за месяц 
+#/*/*/backup/weekly/  директория backup записей за год
+WEEK="Wednesday" #день недели дня еженедельного копированияя
+WDATE="12"      #дата для ежемесячного копирования
+DBACKUP="2"     #колическтво backup записей за денелю
+MBACKUP="2"     #количество backup записей за месяц
+WBACKUP="2"     #количество backup записей за год
 
 
 mkdir -p "$OUTPUT/daily"
@@ -22,34 +22,34 @@ DIRmonthly="$OUTPUT/monthly/$(date +%Y.%m.%d)"
 DIRweekly="$OUTPUT/weekly/$(date +%Y.%m.%d)"
 
 my_function () {
-mysqldump -u$USER -p$PASSWORD --databases $db >>  $1/$db.sql
-gzip $1/$db.sql
+mysqldump -u$USER -p$PASSWORD --databases "$db" >>  "$1"/"$db".sql
+gzip "$1"/"$db".sql
 }
 
-databases=`mysql -u$USER -p$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
+databases=$(mysql -u$USER -p$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "sys" ]] && [[ "$db" != "performance_schema" ]] ; then
-            if [[ `date +%A` == "$WEEK" ]] && [[ `date +%d` == "$WDATE" ]]; then
+            if [[ $(date +%A) == "$WEEK" ]] && [[ $(date +%d) == "$WDATE" ]]; then
                echo "Dumping database DIR: daily, monthly and weekly -$db"
                mkdir -p "$DIRdaily"
                my_function "$DIRdaily"
                mkdir -p "$DIRmonthly"
-               my_function "$DIRmonthly"
+               cp "$DIRdaily"/* "$DIRmonthly"/*
                mkdir -p "$DIRweekly"
-               my_function "$DIRweekly"
-            elif [[ `date +%A` == "$WEEK" ]] ; then
+               cp "$DIRdaily"/* "$DIRweekly"/*
+            elif [[ $(date +%A) == "$WEEK" ]] ; then
                echo "Dumping database DIR: daily and monthly -$db"    
                mkdir -p "$DIRdaily"
                my_function "$DIRdaily"
                mkdir -p "$DIRmonthly"
-               my_function "$DIRmonthly"
-            elif [[ `date +%d` == "$WDATE" ]] ; then
+               cp "$DIRdaily"/* "$DIRmonthly"/*
+            elif [[ $(date +%d) == "$WDATE" ]] ; then
                echo "Dumping database DIR: daily and weekly -$db"
                mkdir -p "$DIRdaily"
                my_function "$DIRdaily"
                mkdir -p "$DIRweekly"
-               my_function "$DIRweekly"
+               cp "$DIRdaily"/* "$DIRweekly"/*
             else
                echo "Dumping database DIR: daily -$db"
                mkdir -p "$DIRdaily"
@@ -59,10 +59,10 @@ for db in $databases; do
 done
 
 function1 () {
-find $DIR -maxdepth 1 -type f -printf '%p\n' | sort -n | head -n -$1 | xargs rm -rf
+find "$DIR" -maxdepth 1 -type f -printf '%p\n' | sort -n | head -n -"$1" | xargs rm -rf
 }
 
-find $OUTPUT -maxdepth 1 -type d | sed 1d | while read ALLDIR
+find "$OUTPUT" -maxdepth 1 -type d | sed 1d | while read -r ALLDIR
 do
     for DIR in $ALLDIR; do
        if   [[ "$DIR" == "$OUTPUT/daily" ]] ; then
