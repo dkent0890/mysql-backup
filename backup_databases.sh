@@ -18,24 +18,24 @@ mkdir -p "$OUTPUT/monthly/"
 mkdir -p "$OUTPUT/weekly/"
 
 my_function () {
-mysqldump -u$USER -p$PASSWORD --databases $db >>  $1`date +%Y%m%d`.$db.sql
-gzip $1`date +%Y%m%d`.$db.sql
+	mysqldump -u$USER -p$PASSWORD --databases "$db" >>  "$1""$(date +%Y%m%d)"."$db".sql
+gzip "$1""$(date +%Y%m%d)"."$db".sql
 }
 
-databases=`mysql -u$USER -p$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
+databases=$(mysql -u$USER -p$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "sys" ]] && [[ "$db" != "performance_schema" ]] ; then
-            if [[ `date +%A` == "$WEEK" ]] && [[ `date +%d` == "$WDATE" ]]; then
+	    if [[ $(date +%A) == "$WEEK" ]] && [[ $(date +%d) == "$WDATE" ]]; then
                echo "Dumping database DIR: daily, monthly and weekly -$db"
                my_function "$OUTPUT/daily/"
                my_function "$OUTPUT/monthly/"
                my_function "$OUTPUT/weekly/"
-            elif [[ `date +%A` == "$WEEK" ]] ; then
+               elif [[ $(date +%A) == "$WEEK" ]] ; then
                echo "Dumping database DIR: daily and monthly -$db"    
                my_function "$OUTPUT/daily/"
                my_function "$OUTPUT/monthly/"
-            elif [[ `date +%d` == "$WDATE" ]] ; then
+               elif [[ $(date +%d) == "$WDATE" ]] ; then
                echo "Dumping database DIR: daily and weekly -$db"
                my_function "$OUTPUT/daily/"
                my_function "$OUTPUT/weekly/"
@@ -47,10 +47,10 @@ for db in $databases; do
 done
 
 function1 () {
-find $DIR -maxdepth 1 -type f -printf '%p\n' | sort -n | head -n -$1 | xargs rm -rf
+find "$DIR" -maxdepth 1 -type f -printf '%p\n' | sort -n | head -n -"$1" | xargs rm -rf
 }
 
-find $OUTPUT -maxdepth 1 -type d | sed 1d | while read ALLDIR
+find "$OUTPUT" -maxdepth 1 -type d | sed 1d | while read -r ALLDIR
 do
     for DIR in $ALLDIR; do
        if   [[ "$DIR" == "$OUTPUT/daily" ]] ; then
