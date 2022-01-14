@@ -22,7 +22,7 @@ DIRmonthly="$OUTPUT/monthly/$(date +%Y.%m.%d)"
 DIRweekly="$OUTPUT/weekly/$(date +%Y.%m.%d)"
 
 my_function () {
-mysqldump -u$USER -p$PASSWORD --databases "$db" >>  "$1"/"$db".sql
+mysqldump -u$USER -p$PASSWORD "$db" >>  "$1"/"$db".sql
 gzip "$1"/"$db".sql
 }
 
